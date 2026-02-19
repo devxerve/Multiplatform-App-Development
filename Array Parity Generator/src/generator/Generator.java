@@ -2,7 +2,7 @@ package main;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
+// hola
 /**
  * Main class that manages the creation and manipulation of arrays of odd and even numbers.
  * It allows the user to input the size of an array, generate random numbers, check parity,
