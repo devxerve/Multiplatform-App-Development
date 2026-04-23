@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Canvas background -->
+    <color name="canvas_background">#1A1A2E</color>
+
+    <!-- Toolbar background -->
+    <color name="toolbar_background">#1F2940</color>
+
+    <!-- Button text -->
+    <color name="button_text">#FFFFFF</color>
+
+    <!-- 8-color palette for explicit color selection -->
+    <color name="color_1">#FF6B6B</color>
+    <color name="color_2">#FF9F43</color>
+    <color name="color_3">#FECA57</color>
+    <color name="color_4">#1DD1A1</color>
+    <color name="color_5">#48DBFB</color>
+    <color name="color_6">#5F27CD</color>
+    <color name="color_7">#FF9FF3</color>
+    <color name="color_8">#FFFFFF</color>
+
+    <!-- Warm palette colors (for reference) -->
+    <color name="warm_red">#FF6B6B</color>
+    <color name="warm_salmon">#FFA07A</color>
+    <color name="warm_gold">#FFD700</color>
+    <color name="warm_orange">#FF8C00</color>
+
+    <!-- Standard colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Compatibility -->
+    <color name="log_background">#16213E</color>
+</resources>

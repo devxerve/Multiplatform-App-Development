@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TouchEvents</string>
+    <string name="clear_button">Limpiar</string>
+    <string name="color_button">Color</string>
+    <string name="stroke_label">Tamaño:</string>
+</resources>
