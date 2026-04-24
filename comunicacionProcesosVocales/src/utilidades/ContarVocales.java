@@ -1,7 +1,11 @@
 package utilidades;
 
 import java.io.*;
+<<<<<<< HEAD
+/**?
+=======
 /**
+>>>>>>> 673672a65872267ab5da135322c71e01153fd145
  * @author Javier Cervera Rodríguez
  */
 public class ContarVocales {

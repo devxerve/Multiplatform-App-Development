@@ -19,7 +19,11 @@ public class Principal {
      * @return codigo de resultado en base a la finalización del proceso, si ocurre una IOException o InterruptedException devuelve -1
      */
 
+<<<<<<< HEAD
+    static int lanzarProceso(String letra, File fichero){
+=======
     static void lanzarProceso(String letra, File fichero){
+>>>>>>> 673672a65872267ab5da135322c71e01153fd145
         File ficheroResultado = new File("resultado_"+letra+".txt");
         File ficheroError = new File("log_"+letra + ".txt");
 
@@ -32,15 +36,27 @@ public class Principal {
         try {
 
             proceso = pb.start();
+<<<<<<< HEAD
+            int retorno = proceso.waitFor();      
+            return retorno;
+=======
             Thread.sleep(300);    
             
+>>>>>>> 673672a65872267ab5da135322c71e01153fd145
 
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
         }
+<<<<<<< HEAD
+
+        return -1;
+    }
+    public static void main(String[] args) {
+=======
     }
     public static void main(String[] args) {
     	System.out.println("Directorio de trabajo: " + System.getProperty("user.dir"));
+>>>>>>> 673672a65872267ab5da135322c71e01153fd145
         String [] vocales = new String[5];
         String contenido = getContenido();
         
@@ -51,10 +67,22 @@ public class Principal {
         vocales[4] = "u";
         
             for(int i = 0; i<vocales.length;i++){
+<<<<<<< HEAD
+                String error = " ";
+                System.out.println("[Main] - Lanzando proceso " + (i+1) + " (" + vocales[i] + ")");
+                int resultado = lanzarProceso(vocales[i],FICHERO);
+
+                if(resultado != 0){
+                    error = "Ha ocurrido algo con el proceso y no se ha ejecutado correctamente";
+                }
+
+                System.out.println("[Main] - Resultado proceso " + (i+1) + " = "+ resultado +" | " + error);
+=======
             
                 System.out.println("[Main] - Lanzando proceso " + (i+1) + " (" + vocales[i] + ")");
                 lanzarProceso(vocales[i],FICHERO);
 
+>>>>>>> 673672a65872267ab5da135322c71e01153fd145
             }
 
             for(int i = 0;i<vocales.length;i++){
