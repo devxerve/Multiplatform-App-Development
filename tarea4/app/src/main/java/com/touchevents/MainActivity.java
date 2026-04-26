@@ -12,9 +12,7 @@ import com.tuapp.touchevents.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-/**
- * Main activity that hosts the touch canvas view and handles UI controls.
- */
+
 public class MainActivity extends AppCompatActivity {
 
     private Lienzo lienzo;
@@ -89,12 +87,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(android.widget.SeekBar seekBar) {
-                // No se necesita acción
+
             }
 
             @Override
             public void onStopTrackingTouch(android.widget.SeekBar seekBar) {
-                // No se necesita acción
+
             }
         });
     }

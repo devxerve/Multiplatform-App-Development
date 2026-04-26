@@ -18,9 +18,6 @@ import androidx.core.view.ViewCompat;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Custom view that captures and displays multitouch events with smooth stroke drawing.
- */
 public class Lienzo extends View {
 
     // Caminos activos indexados por ID de puntero
