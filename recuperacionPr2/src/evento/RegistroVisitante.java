@@ -27,6 +27,8 @@ public class RegistroVisitante extends javax.swing.JFrame {
     private void initComponents() {
 
         tipoGROUP = new javax.swing.ButtonGroup();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -41,6 +43,20 @@ public class RegistroVisitante extends javax.swing.JFrame {
         estudianteBTN = new javax.swing.JRadioButton();
         jSeparator1 = new javax.swing.JSeparator();
         provinciaCBOX = new javax.swing.JComboBox<>();
+        mostrarBTN = new javax.swing.JButton();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(6000, 0));
@@ -103,43 +119,45 @@ public class RegistroVisitante extends javax.swing.JFrame {
         provinciaCBOX.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Extranjero  ", "Álava  ", "Albacete  ", "Alicante  ", "Almería  ", "Asturias  ", "Ávila  ", "Badajoz  ", "Islas Baleares  ", "Barcelona  ", "Burgos  ", "Cáceres  ", "Cádiz  ", "Cantabria  ", "Castellón  ", "Ciudad Real  ", "Córdoba  ", "La Coruña  ", "Cuenca  ", "Gerona  ", "Granada  ", "Guadalajara  ", "Guipúzcoa  ", "Huelva  ", "Huesca  ", "Jaén  ", "León  ", "Lérida  ", "Lugo  ", "Madrid  ", "Málaga  ", "Murcia  ", "Navarra  ", "Orense  ", "Palencia  ", "Las Palmas  ", "Pontevedra  ", "La Rioja  ", "Salamanca  ", "Santa Cruz de Tenerife  ", "Segovia  ", "Sevilla  ", "Soria  ", "Tarragona  ", "Teruel  ", "Toledo  ", "Valencia  ", "Valladolid  ", "Vizcaya  ", "Zamora  ", "Zaragoza" }));
         provinciaCBOX.setToolTipText("");
 
+        mostrarBTN.setText("Mostrar Registro");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(125, 125, 125)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(125, 125, 125)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addGap(28, 28, 28)
-                                        .addComponent(profesorBTN))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jLabel3)))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(estudianteBTN)
-                                    .addComponent(horaTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(provinciaCBOX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(102, 102, 102)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(limpiarBTN)
-                                .addGap(18, 18, 18)
-                                .addComponent(cancelarBTN)
-                                .addGap(18, 18, 18)
-                                .addComponent(confirmarBTN)))))
-                .addContainerGap(76, Short.MAX_VALUE))
+                                .addComponent(jLabel5)
+                                .addGap(28, 28, 28)
+                                .addComponent(profesorBTN))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel3)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(estudianteBTN)
+                            .addComponent(horaTF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nombreTF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(provinciaCBOX, 0, 1, Short.MAX_VALUE)))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(218, 218, 218)
+                .addComponent(mostrarBTN))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(102, 102, 102)
+                .addComponent(limpiarBTN)
+                .addGap(18, 18, 18)
+                .addComponent(cancelarBTN)
+                .addGap(18, 18, 18)
+                .addComponent(confirmarBTN))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(68, 68, 68)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 482, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,7 +188,9 @@ public class RegistroVisitante extends javax.swing.JFrame {
                     .addComponent(limpiarBTN)
                     .addComponent(cancelarBTN)
                     .addComponent(confirmarBTN))
-                .addContainerGap(173, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(mostrarBTN)
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         pack();
@@ -276,7 +296,10 @@ public class RegistroVisitante extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new RegistroVisitante().setVisible(true));
+       RegistroVisitante ventana = new RegistroVisitante();
+       ventana.setResizable(false);
+       ventana.setLocationRelativeTo(null);
+       ventana.setVisible(true);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -289,8 +312,11 @@ public class RegistroVisitante extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JButton limpiarBTN;
+    private javax.swing.JButton mostrarBTN;
     private javax.swing.JTextField nombreTF;
     private javax.swing.JRadioButton profesorBTN;
     private javax.swing.JComboBox<String> provinciaCBOX;
