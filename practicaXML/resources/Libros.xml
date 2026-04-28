@@ -3,21 +3,26 @@ xsi:noNamespaceSchemaLocation="LibrosEsquema.xsd">
     <Libro publicado_en="1838">
         <Titulo>Oliver Twist</Titulo>
         <Autor>Charles Dickens</Autor>
+        <isbn>9780141439747</isbn>
     </Libro>
     <Libro publicado_en="2005">
         <Titulo>El mar</Titulo>
         <Autor>John Banville</Autor>
+        <isbn>9788433971043</isbn>
     </Libro>
     <Libro publicado_en="1946">
         <Titulo>El principito</Titulo>
         <Autor>Antoine de Saint-Exupéry</Autor>
+        <isbn>9780156013987</isbn>
     </Libro>
     <Libro publicado_en="1605">
         <Titulo>Don Quijote de la Mancha</Titulo>
         <Autor>Miguel de Cervantes</Autor>
+        <isbn>9788420412146</isbn>
     </Libro>
     <Libro publicado_en="1967">
         <Titulo>Cien años de soledad</Titulo>
         <Autor>Gabriel García Márquez</Autor>
+        <isbn>9780307474728</isbn>
     </Libro>
 </Libros>

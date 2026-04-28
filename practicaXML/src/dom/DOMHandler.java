@@ -6,6 +6,7 @@ package dom;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
@@ -19,7 +20,7 @@ public class DOMHandler {
     
     public DOMHandler(File file){
         this.file = file;
-        path = file.getAbsolutePath();
+        
     };
     
     /**
@@ -51,10 +52,11 @@ public class DOMHandler {
             Node node = nodes.item(i);
             if(node.getNodeType() == Node.ELEMENT_NODE){  
                 String[] datum = processNodes(node);
-                output += "\n Publicado en :" + datum[0];
-                output += "\n El titulo es :" + datum[1];
-                output += "\n El autor es :" + datum[2];
-                output += "\n --------------";
+                output += datum[1];
+                output += "\nEl isbn es: " + datum[3];
+                output += "\nPublicado en: " + datum[0];
+                output += "\nEl autor es: " + datum[2];
+                output += "\n--------------\n";
             }
         }
         System.out.println(output);
@@ -62,7 +64,7 @@ public class DOMHandler {
     }
     
     private String[] processNodes(Node n){
-        String [] data = new String[3];
+        String [] data = new String[4];
         Node ntemp = null;
         int counter = 1;
 
@@ -79,7 +81,7 @@ public class DOMHandler {
         return data;
     }
     
-    public int addToDOM(String title, String author, String year){
+    public int addToDOM(String title, String author, String year,String isbn){
         try{
             Node ntitle = doc.createElement("Titulo");
             Node ntitleText = doc.createTextNode(title);
@@ -92,8 +94,14 @@ public class DOMHandler {
             Node nbook = doc.createElement("Libro");
             ((Element)nbook).setAttribute("publicado_en",year);
             
+            Node nisbn = doc.createElement("isbn");
+            Node nisbnText = doc.createTextNode(isbn); 
+            nisbn.appendChild(nisbnText);
+            
+            
             nbook.appendChild(ntitle);
             nbook.appendChild(nauthor);
+            nbook.appendChild(nisbn);
             
             Node root = doc.getFirstChild();
             
@@ -105,20 +113,106 @@ public class DOMHandler {
         }
     }
 
-    public int saveDOMtoXML(){    
-        //TODO: Implement this with a JFileChooser
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer;
-        try {
-            transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT,"yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount","2");
-        DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(file);
-        transformer.transform(source, result);
-        }catch (TransformerException ex) {
-            Logger.getLogger(DOMHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;
+    public int saveDOMtoXML() {
+    JFileChooser chooser = new JFileChooser();
+    chooser.setDialogTitle("Guardar XML");
+    chooser.setSelectedFile(new File("libros.xml"));
+    chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("XML files", "xml"));
+
+    int userSelection = chooser.showSaveDialog(null);
+
+    if (userSelection != JFileChooser.APPROVE_OPTION) {
+        return -1;
     }
+
+    File outputFile = chooser.getSelectedFile();
+
+    if (outputFile.exists()) {
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(
+            null,
+            "El fichero ya existe. ¿Sobreescribir?",
+            "Confirmar",
+            javax.swing.JOptionPane.YES_NO_OPTION
+        );
+        if (confirm != javax.swing.JOptionPane.YES_OPTION) {
+            return -1;
+        }
+    }
+
+    try {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(outputFile);
+        transformer.transform(source, result);
+        
+        return 0;
+    } catch (TransformerException ex) {
+        Logger.getLogger(DOMHandler.class.getName()).log(Level.SEVERE, null, ex);
+        return -1;
+    }
+}
+
+    public int modifyInDOM(String search, String newTitle, String newAuthor, String newYear) {
+    Node root = doc.getFirstChild();
+    NodeList nodes = root.getChildNodes();
+
+    for (int i = 0; i < nodes.getLength(); i++) {
+        Node node = nodes.item(i);
+        if (node.getNodeType() != Node.ELEMENT_NODE){
+            
+            NodeList children = node.getChildNodes();
+            
+            for (int j = 0; j < children.getLength(); j++) {
+                Node child = children.item(j);
+                if ("isbn".equals(child.getNodeName())) {
+                    
+                    if (child.getFirstChild().getNodeValue().equals(search)) {
+                        
+                        for (int k = 0; k < children.getLength(); k++) {
+                            Node field = children.item(k);
+                            if ("Titulo".equals(field.getNodeName()) && newTitle != null && !newTitle.isBlank()) {
+                                field.getFirstChild().setNodeValue(newTitle);
+                            } else if ("Autor".equals(field.getNodeName()) && newAuthor != null && !newAuthor.isBlank()) {
+                                field.getFirstChild().setNodeValue(newAuthor);
+                            }
+                        }
+                        
+                        if (newYear != null && !newYear.isBlank()) {
+                            ((Element) node).setAttribute("publicado_en", newYear);
+                        }
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+    return -1;
+}
+
+    public Boolean verifyExistence(String search){
+        Node root = doc.getFirstChild();
+        NodeList nodes = root.getChildNodes();
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() != Node.ELEMENT_NODE){
+               NodeList children = node.getChildNodes();
+                for (int j = 0; j < children.getLength(); j++) {
+                    Node child = children.item(j);
+                    if ("isbn".equals(child.getNodeName())) {
+                        if (child.getFirstChild().getNodeValue().equals(search)) {
+                            return true;
+                        }
+                    }
+                }
+            } 
+        }
+        
+        return false;
+    }
+    
 }

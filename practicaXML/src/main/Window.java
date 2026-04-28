@@ -8,6 +8,10 @@ import dom.DOMHandler;
 import java.awt.HeadlessException;
 import java.io.*;
 import javax.swing.JFileChooser;
+import javax.swing.JSpinner;
+import javax.xml.parsers.ParserConfigurationException;
+import jaxbHandler.JAXBHandler;
+import org.xml.sax.SAXException;
 import sax.SAXHandler;
 
 /**
@@ -18,6 +22,7 @@ public class Window extends javax.swing.JFrame {
     
     private DOMHandler domhandler = null;
     private SAXHandler saxhandler = null;
+    private JAXBHandler jaxbhandler = null;
     File file = null;
     private static int method = 0; // Sirve para determinar que modelo de acceso usar
     
@@ -28,6 +33,8 @@ public class Window extends javax.swing.JFrame {
      */
     public Window() {
         initComponents();
+        setLocationRelativeTo(null);
+        setResizable(false);
     }
 
     /**
@@ -41,14 +48,21 @@ public class Window extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        modificarBTN = new javax.swing.JButton();
+        contentTA = new javax.swing.JTextArea();
+        modifyBTN = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        tituloTF = new javax.swing.JTextField();
+        titleTF = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        autorTF = new javax.swing.JTextField();
-        fechaSPN = new javax.swing.JSpinner();
+        authorTF = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        saveBTN = new javax.swing.JButton();
+        cleanBTN = new javax.swing.JButton();
+        dateTF = new javax.swing.JTextField();
+        searchBTN = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        isbnTF = new javax.swing.JTextField();
+        addBTN = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         domMI = new javax.swing.JMenuItem();
@@ -59,11 +73,17 @@ public class Window extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        contentTA.setColumns(20);
+        contentTA.setRows(5);
+        jScrollPane1.setViewportView(contentTA);
 
-        modificarBTN.setText("Modificar libro");
+        modifyBTN.setText("Modificar libro");
+        modifyBTN.setEnabled(false);
+        modifyBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modifyBTNActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Titulo");
 
@@ -71,7 +91,40 @@ public class Window extends javax.swing.JFrame {
 
         jLabel4.setText("Año");
 
-        jMenu1.setText("File");
+        jLabel5.setText("Ingresa los datos si quieres cambiar, buscar o añadir algun libro");
+
+        saveBTN.setText("Guardar XML");
+        saveBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBTNActionPerformed(evt);
+            }
+        });
+
+        cleanBTN.setText("Limpiar campos");
+        cleanBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cleanBTNActionPerformed(evt);
+            }
+        });
+
+        searchBTN.setText("Buscar");
+        searchBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchBTNActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("ISBN");
+
+        addBTN.setText("Añadir libro");
+        addBTN.setEnabled(false);
+        addBTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBTNActionPerformed(evt);
+            }
+        });
+
+        jMenu1.setText("Opciones");
 
         domMI.setText("Abrir con DOM");
         domMI.addActionListener(new java.awt.event.ActionListener() {
@@ -108,27 +161,41 @@ public class Window extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(35, 35, 35)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(136, 136, 136)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(fechaSPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(autorTF, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-                                    .addComponent(tituloTF)))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4))
+                                .addGap(51, 51, 51)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(titleTF)
+                                    .addComponent(authorTF)
+                                    .addComponent(dateTF)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(82, 82, 82)
+                                .addComponent(isbnTF))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(171, 171, 171))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(modifyBTN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(modificarBTN)
-                        .addGap(46, 46, 46)))
-                .addGap(171, 171, 171))
+                        .addComponent(cleanBTN)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchBTN)
+                        .addGap(165, 165, 165))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addComponent(addBTN)
+                        .addGap(45, 45, 45)
+                        .addComponent(saveBTN)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,45 +206,381 @@ public class Window extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(55, 55, 55))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(tituloTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(titleTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(isbnTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel3)
-                                    .addComponent(autorTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(fechaSPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel4))
-                        .addGap(57, 57, 57)
-                        .addComponent(modificarBTN)
-                        .addGap(224, 224, 224))))
+                                    .addComponent(authorTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(44, 44, 44))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel4)
+                                .addComponent(dateTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(63, 63, 63)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(modifyBTN)
+                            .addComponent(searchBTN)
+                            .addComponent(cleanBTN))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(saveBTN)
+                            .addComponent(addBTN))
+                        .addGap(156, 156, 156))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    /**
+     * Setea el codigo de metodo a 2 (para usarlo luego)
+     * Abre el archivo y genera el handler correspondiente
+     * Muestra un JOptionPane si algo falla
+     * @param evt 
+     */
     private void saxMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saxMIActionPerformed
         method = 2;
+        modifyBTN.setEnabled(false);
+        int opened = openFile();
+        if(opened == 0){
+            try {
+                javax.xml.parsers.SAXParserFactory factory = javax.xml.parsers.SAXParserFactory.newInstance();
+                javax.xml.parsers.SAXParser saxParser = factory.newSAXParser();
+                saxhandler = new SAXHandler();
+                saxParser.parse(file, saxhandler);
+                contentTA.setText(saxhandler.file_content); 
+            }catch(ParserConfigurationException | SAXException | IOException e ){
+                javax.swing.JOptionPane.showMessageDialog(
+                    null,
+                    "Error al leer el XML: " + e.getMessage(),
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }
+                
+        }else{
+            javax.swing.JOptionPane.showMessageDialog(
+                null,
+                "Error al Acceder al archivo",
+                "Error",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+        }  
     }//GEN-LAST:event_saxMIActionPerformed
-
+    
+    /**
+     * Setea el codigo de metodo a 1 (para poder usarlo luego)
+     * Abre el archivo y crea el handler correspondiente
+     * Habilita los botones de añadir y modificar
+     * Si algo falla muesta un JOptionPane
+     * @param evt 
+     */
     private void domMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domMIActionPerformed
         method = 1;
         int opened = openFile();
         if(opened !=0){
-            // TODO: meter un jOptionPane con un mensaje de error
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Error al acceder al fichero XMl:\n",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
         }else{
             domhandler = new DOMHandler(file);
-        }
+            int processed = domhandler.loadXML();
+            modifyBTN.setEnabled(true);
+            addBTN.setEnabled(true);
+            if(processed !=0){
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Error al procesar el fichero DOM:\n",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }else{
+                contentTA.setText(domhandler.processDOM());
+            } 
+        }     
     }//GEN-LAST:event_domMIActionPerformed
-
+    
+    /**
+     * Setea el codigo de metodo a 3 (para poder usarlo luego
+     * Abre el archivo y crea el handler correspondiente
+     * Si falla muestra un JOptionPane con el fallo
+     * Habilita el boton de modificar
+     * @param evt 
+     */
     private void jaxbMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaxbMIActionPerformed
-        // TODO add your handling code here:
+        method = 3;
+        int opened = openFile();
+
+        if(opened != 0) {
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Error al acceder al fichero XML",
+                "Error",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+        } else {
+            jaxbhandler = new JAXBHandler(file);
+            int processed = jaxbhandler.loadXML();
+            modifyBTN.setEnabled(true);
+
+            if (processed != 0) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Error al procesar el fichero con JAXB",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            } else {
+                contentTA.setText(jaxbhandler.processJAXB());
+            }
+        }     
     }//GEN-LAST:event_jaxbMIActionPerformed
     
+    /**
+     * Modifica el libro en base a su isbn (DOM Y JAXB)
+     * Usa el codigo de method para definir cual metodo ejecuta
+     * @param evt 
+     */
+    private void modifyBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyBTNActionPerformed
+        if (method == 1) {
+            String search = isbnTF.getText().trim();
+            if (search.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Introduce el isbn del libro que quieres modificar",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+            
+            String newAuthor = authorTF.getText().trim();
+            String newYear = dateTF.getText().trim();
+
+
+            int result = domhandler.modifyInDOM(search, null, newAuthor, newYear);
+
+            if (result == 0) {
+                contentTA.setText(domhandler.processDOM());
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Libro modificado correctamente",
+                    "Éxito",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se encontró ningún libro con ese título",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }else if(method == 3) {
+            String isbn = isbnTF.getText().trim();
+            String nuevoTitulo = titleTF.getText().trim();
+            String nuevoAutor = authorTF.getText().trim();
+            String nuevoAnio = dateTF.getText().trim();
+
+            if (isbn.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Introduce un ISBN para identificar el libro a modificar",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            int result = jaxbhandler.modifyBookByIsbn(isbn, nuevoTitulo, nuevoAutor, nuevoAnio);
+
+            if (result == 0) {
+                contentTA.setText(jaxbhandler.processJAXB());
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Libro modificado correctamente",
+                    "Éxito",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+            } else if (result == -1) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se encontró ningún libro con ese ISBN",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Error al modificar el libro",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }        
+    }//GEN-LAST:event_modifyBTNActionPerformed
     
+    /**
+     * Guarda el archivo en la localizacion que el usuario quiera
+     * Usa el codigo method para definir como se guarda
+     * @param evt 
+     */
+    private void saveBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBTNActionPerformed
+        if (method == 1) {
+        int saved = domhandler.saveDOMtoXML();
+
+        if (saved != 0) {
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Ha ocurrido un problema al guardar el fichero",
+                "Error",
+                javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Fichero guardado con exito",
+                "Exito",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+
+        contentTA.setText(domhandler.processDOM());
+
+    } else if(method == 3) {
+        JFileChooser selector = new JFileChooser();
+        int selection = selector.showSaveDialog(this);
+
+        if (selection == JFileChooser.APPROVE_OPTION) {
+            File outputFile = selector.getSelectedFile();
+            int saved = jaxbhandler.saveJAXBtoXML(outputFile);
+
+            if (saved != 0) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Ha ocurrido un problema al guardar el fichero XML",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Fichero guardado con exito",
+                    "Exito",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+                contentTA.setText(jaxbhandler.processJAXB());
+            }
+        }
+    }
+    }//GEN-LAST:event_saveBTNActionPerformed
+    
+    /**
+     * Limpia los campos
+     * @param evt 
+     */
+    private void cleanBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cleanBTNActionPerformed
+        titleTF.setText("");
+        authorTF.setText("");
+        dateTF.setText("");
+        isbnTF.setText("");
+    }//GEN-LAST:event_cleanBTNActionPerformed
+    
+    /**
+     * Busca por ISBN
+     * @param evt 
+     */
+    private void searchBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBTNActionPerformed
+        if (method == 3) {
+            String isbn = isbnTF.getText().trim();
+
+            if (isbn.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Introduce un ISBN para buscar",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE                       
+                );
+                return;
+            }
+
+            jaxb.Libros.Libro libro = jaxbhandler.searchByIsbn(isbn);
+
+            if (libro != null) {
+                titleTF.setText(libro.getTitulo());
+                authorTF.setText(libro.getAutor());
+                dateTF.setText(libro.getPublicadoEn().toString());
+                isbnTF.setText(libro.getIsbn());
+
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Libro encontrado",
+                    "Éxito",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No se encontró ningún libro con ese ISBN",
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }//GEN-LAST:event_searchBTNActionPerformed
+    
+    /**
+     * Permite añadir un nuevo libro en base a los datos de los textFields
+     * Valida ademas si existe ya un registro de ese libro mediante un metodo
+     * de domhandler
+     * @param evt 
+     */
+    private void addBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBTNActionPerformed
+        String title = titleTF.getText().trim();
+        String author = authorTF.getText().trim();
+        String year = dateTF.getText().trim();
+        String isbn = isbnTF.getText().trim();
+
+        if (title.isEmpty() || author.isEmpty() || year.isEmpty() || isbn.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Rellena todos los campos para añadir un libro",
+                "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        boolean exists = domhandler.verifyExistence(isbn);
+        if(!exists){
+            int result = domhandler.addToDOM(title, author, year, isbn);
+            if(result == 0) {
+                contentTA.setText(domhandler.processDOM());
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error al añadir el libro", "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }else {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Ya existe un libro con ese ISBN",
+                "Aviso",
+                 javax.swing.JOptionPane.WARNING_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_addBTNActionPerformed
+    
+    
+    /**
+     * Abre un JFileChooser y lo asigna a una variable global de tipo File
+     * @return Codigo 0 si se abre correctamente, -1 si hay fallo
+     */
     private int openFile(){
         JFileChooser selector = new JFileChooser();
 	selector.setMultiSelectionEnabled(false);
@@ -194,6 +597,7 @@ public class Window extends javax.swing.JFrame {
 	} 
         return 0;
     }
+    
     /**
      * @param args the command line arguments
      */
@@ -217,23 +621,31 @@ public class Window extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Window().setVisible(true));
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField autorTF;
+    private javax.swing.JButton addBTN;
+    private javax.swing.JTextField authorTF;
+    private javax.swing.JButton cleanBTN;
+    private javax.swing.JTextArea contentTA;
+    private javax.swing.JTextField dateTF;
     private javax.swing.JMenuItem domMI;
-    private javax.swing.JSpinner fechaSPN;
+    private javax.swing.JTextField isbnTF;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JMenuItem jaxbMI;
-    private javax.swing.JButton modificarBTN;
+    private javax.swing.JButton modifyBTN;
+    private javax.swing.JButton saveBTN;
     private javax.swing.JMenuItem saxMI;
-    private javax.swing.JTextField tituloTF;
+    private javax.swing.JButton searchBTN;
+    private javax.swing.JTextField titleTF;
     // End of variables declaration//GEN-END:variables
 }
