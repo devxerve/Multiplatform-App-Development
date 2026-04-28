@@ -1,0 +1,23 @@
+<Libros xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:noNamespaceSchemaLocation="LibrosEsquema.xsd">
+    <Libro publicado_en="1838">
+        <Titulo>Oliver Twist</Titulo>
+        <Autor>Charles Dickens</Autor>
+    </Libro>
+    <Libro publicado_en="2005">
+        <Titulo>El mar</Titulo>
+        <Autor>John Banville</Autor>
+    </Libro>
+    <Libro publicado_en="1946">
+        <Titulo>El principito</Titulo>
+        <Autor>Antoine de Saint-Exupéry</Autor>
+    </Libro>
+    <Libro publicado_en="1605">
+        <Titulo>Don Quijote de la Mancha</Titulo>
+        <Autor>Miguel de Cervantes</Autor>
+    </Libro>
+    <Libro publicado_en="1967">
+        <Titulo>Cien años de soledad</Titulo>
+        <Autor>Gabriel García Márquez</Autor>
+    </Libro>
+</Libros>

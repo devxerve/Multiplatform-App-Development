@@ -4,33 +4,28 @@
  */
 package main;
 
+import dom.DOMHandler;
 import java.awt.HeadlessException;
 import java.io.*;
 import javax.swing.JFileChooser;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import domHandler.DOMHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.SAXException;
-import saxHandler.SAXHandler;
+import sax.SAXHandler;
 
 /**
  *
- * @author devXerve
+ * @author xerve
  */
 public class Window extends javax.swing.JFrame {
-    public static DOMHandler domhandler = null;
-    public static SAXHandler saxhandler = null;
-    public static SAXParser saxparser;
-    // public static JAXBHandler jaxbhandler = null;
+    
+    private DOMHandler domhandler = null;
+    private SAXHandler saxhandler = null;
+    File file = null;
+    private static int method = 0; // Sirve para determinar que modelo de acceso usar
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Window.class.getName());
+
     /**
      * Creates new form Window
      */
-    private File file = null;
     public Window() {
         initComponents();
     }
@@ -44,20 +39,23 @@ public class Window extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        yearSpinner = new javax.swing.JSpinner();
-        yearLabel = new javax.swing.JLabel();
-        authLabel = new javax.swing.JLabel();
-        authTF = new javax.swing.JTextField();
-        titleLabel = new javax.swing.JLabel();
-        titleTF = new javax.swing.JTextField();
-        addBtn = new javax.swing.JButton();
-        loadBtn = new javax.swing.JButton();
+        modificarBTN = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        tituloTF = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        autorTF = new javax.swing.JTextField();
+        fechaSPN = new javax.swing.JSpinner();
+        jLabel4 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         domMI = new javax.swing.JMenuItem();
         saxMI = new javax.swing.JMenuItem();
+        jaxbMI = new javax.swing.JMenuItem();
+
+        jLabel1.setText("jLabel1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -65,30 +63,17 @@ public class Window extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        yearLabel.setText("Año");
+        modificarBTN.setText("Modificar libro");
 
-        authLabel.setText("Autor");
+        jLabel2.setText("Titulo");
 
-        titleLabel.setText("Título");
+        jLabel3.setText("Autor");
 
-        addBtn.setText("Añadir libro");
-        addBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addBtnActionPerformed(evt);
-            }
-        });
-
-        loadBtn.setText("Cargar DOM");
-        loadBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadBtnActionPerformed(evt);
-            }
-        });
+        jLabel4.setText("Año");
 
         jMenu1.setText("File");
 
-        domMI.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        domMI.setText("ABRIR CON DOM");
+        domMI.setText("Abrir con DOM");
         domMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 domMIActionPerformed(evt);
@@ -96,14 +81,21 @@ public class Window extends javax.swing.JFrame {
         });
         jMenu1.add(domMI);
 
-        saxMI.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        saxMI.setText("ABRIR CON SAX");
+        saxMI.setText("Abrir con SAX");
         saxMI.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saxMIActionPerformed(evt);
             }
         });
         jMenu1.add(saxMI);
+
+        jaxbMI.setText("Abrir con JAXB");
+        jaxbMI.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jaxbMIActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jaxbMI);
 
         jMenuBar1.add(jMenu1);
 
@@ -114,102 +106,77 @@ public class Window extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(authLabel)
-                    .addComponent(yearLabel)
-                    .addComponent(titleLabel))
-                .addGap(48, 48, 48)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(titleTF)
-                    .addComponent(authTF)
-                    .addComponent(yearSpinner))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(addBtn)
-                    .addComponent(loadBtn))
-                .addGap(38, 38, 38))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(145, 145, 145)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(fechaSPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(autorTF, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                                    .addComponent(tituloTF)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(modificarBTN)
+                        .addGap(46, 46, 46)))
+                .addGap(171, 171, 171))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap(73, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(127, 127, 127)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(titleTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(titleLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(authTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(authLabel)
-                            .addComponent(addBtn))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(yearSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(yearLabel)
-                            .addComponent(loadBtn))))
-                .addContainerGap(45, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(55, 55, 55))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(tituloTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(autorTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(fechaSPN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel4))
+                        .addGap(57, 57, 57)
+                        .addComponent(modificarBTN)
+                        .addGap(224, 224, 224))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void saxMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saxMIActionPerformed
+        method = 2;
+    }//GEN-LAST:event_saxMIActionPerformed
+
     private void domMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_domMIActionPerformed
-	// int opened = openFile();
-       // if(opened == 0 ){
-         //   domhandler = new DOMHandler(file);
-        //    int processed = domhandler.loadXML();
-        //    if(processed!=0){
-        //        System.out.println("ha habido un error al cargar el documento XML");
-        //    }
-        //    jTextArea1.setText(domhandler.processDOM());
-       // }else{
-        //    System.out.println("Ha ocurrido un error al acceder al fichero");
-       // }
+        method = 1;
+        int opened = openFile();
+        if(opened !=0){
+            // TODO: meter un jOptionPane con un mensaje de error
+        }else{
+            domhandler = new DOMHandler(file);
+        }
     }//GEN-LAST:event_domMIActionPerformed
 
-    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
-        try{
-            domhandler = new DOMHandler(file);
-            String year = yearSpinner.getValue().toString();
-            int result = domhandler.addToDOM(titleTF.getText(), authTF.getText(),year);
-            if(result !=0){
-                System.out.println("Error al añadir el libro");
-            }
-        }catch(NullPointerException ex){
-            System.out.println("El fichero no esta abierto");
-        }      
-        
-    }//GEN-LAST:event_addBtnActionPerformed
-
-    private void loadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadBtnActionPerformed
-        int opened = domhandler.loadXML();
-        if(opened != 0){
-            System.out.println("Error al cargar los cambios");
-        }
-    }//GEN-LAST:event_loadBtnActionPerformed
-
-    private void saxMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saxMIActionPerformed
-        int opened = openFile();
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        try {
-            saxparser = factory.newSAXParser();
-        } catch (ParserConfigurationException ex) {
-            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if(opened == 0 ){
-            saxhandler = new SAXHandler();
-            jTextArea1.setText(processSax());
-        }
-    }//GEN-LAST:event_saxMIActionPerformed
+    private void jaxbMIActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jaxbMIActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jaxbMIActionPerformed
+    
     
     private int openFile(){
         JFileChooser selector = new JFileChooser();
@@ -227,17 +194,6 @@ public class Window extends javax.swing.JFrame {
 	} 
         return 0;
     }
-    private String processSax() {
-        try{
-           saxhandler.file_content="";
-           saxparser.parse(file,saxhandler);
-           return saxhandler.file_content;
-        }catch(SAXException ex){
-            return "Error al parsear con SAX";
-        }catch(IOException ex){
-            return "Error al parsear con SAX";
-        }
-    }
     /**
      * @param args the command line arguments
      */
@@ -254,50 +210,30 @@ public class Window extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Window.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-               Window window = new Window();
-               windowConfig(window);
-               window.setVisible(true);
-            }
-
-           private void windowConfig(Window window) {
-                SpinnerNumberModel model = new SpinnerNumberModel(2026, 1900, 2026, 1);
-                window.yearSpinner.setModel(model);
-                window.yearSpinner.setEditor(new JSpinner.NumberEditor(window.yearSpinner, "#"));
-            }
-            
-        });
+        java.awt.EventQueue.invokeLater(() -> new Window().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addBtn;
-    private javax.swing.JLabel authLabel;
-    private javax.swing.JTextField authTF;
+    private javax.swing.JTextField autorTF;
     private javax.swing.JMenuItem domMI;
+    private javax.swing.JSpinner fechaSPN;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JButton loadBtn;
+    private javax.swing.JMenuItem jaxbMI;
+    private javax.swing.JButton modificarBTN;
     private javax.swing.JMenuItem saxMI;
-    private javax.swing.JLabel titleLabel;
-    private javax.swing.JTextField titleTF;
-    private javax.swing.JLabel yearLabel;
-    private javax.swing.JSpinner yearSpinner;
+    private javax.swing.JTextField tituloTF;
     // End of variables declaration//GEN-END:variables
-
-    
 }
