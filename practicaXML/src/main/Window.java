@@ -255,7 +255,7 @@ public class Window extends javax.swing.JFrame {
                 javax.xml.parsers.SAXParser saxParser = factory.newSAXParser();
                 saxhandler = new SAXHandler();
                 saxParser.parse(file, saxhandler);
-                contentTA.setText(saxhandler.file_content); 
+                contentTA.setText(saxhandler.fileContent); 
             }catch(ParserConfigurationException | SAXException | IOException e ){
                 javax.swing.JOptionPane.showMessageDialog(
                     null,
@@ -352,8 +352,9 @@ public class Window extends javax.swing.JFrame {
      * @param evt 
      */
     private void modifyBTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyBTNActionPerformed
+        String search = isbnTF.getText().trim();
         if (method == 1) {
-            String search = isbnTF.getText().trim();
+            
             if (search.isEmpty()) {
                 javax.swing.JOptionPane.showMessageDialog(
                     this,
@@ -364,11 +365,12 @@ public class Window extends javax.swing.JFrame {
                 return;
             }
             
+            String newTitle = titleTF.getText().trim();
             String newAuthor = authorTF.getText().trim();
             String newYear = dateTF.getText().trim();
+            
 
-
-            int result = domhandler.modifyInDOM(search, null, newAuthor, newYear);
+            int result = domhandler.modifyInDOM(search,newTitle, newAuthor, newYear);
 
             if (result == 0) {
                 contentTA.setText(domhandler.processDOM());
@@ -381,28 +383,27 @@ public class Window extends javax.swing.JFrame {
             } else {
                 javax.swing.JOptionPane.showMessageDialog(
                     this,
-                    "No se encontró ningún libro con ese título",
+                    "No se encontró ningún libro con ese isbn",
                     "Error",
                     javax.swing.JOptionPane.ERROR_MESSAGE
                 );
             }
         }else if(method == 3) {
-            String isbn = isbnTF.getText().trim();
-            String nuevoTitulo = titleTF.getText().trim();
-            String nuevoAutor = authorTF.getText().trim();
-            String nuevoAnio = dateTF.getText().trim();
+            String newTitle = titleTF.getText().trim();
+            String newAuthor = authorTF.getText().trim();
+            String newYear = dateTF.getText().trim();
 
-            if (isbn.isEmpty()) {
+            if (search.isEmpty()) {
                 javax.swing.JOptionPane.showMessageDialog(
                     this,
-                    "Introduce un ISBN para identificar el libro a modificar",
+                    "Introduce el isbn del libro que quieres modificar",
                     "Error",
                     javax.swing.JOptionPane.ERROR_MESSAGE
                 );
                 return;
             }
 
-            int result = jaxbhandler.modifyBookByIsbn(isbn, nuevoTitulo, nuevoAutor, nuevoAnio);
+            int result = jaxbhandler.modifyinJAX(search, newTitle, newAuthor, newYear);
 
             if (result == 0) {
                 contentTA.setText(jaxbhandler.processJAXB());
@@ -412,10 +413,10 @@ public class Window extends javax.swing.JFrame {
                     "Éxito",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE
                 );
-            } else if (result == -1) {
+            } else if (result == -2) {
                 javax.swing.JOptionPane.showMessageDialog(
                     this,
-                    "No se encontró ningún libro con ese ISBN",
+                    "No se encontró ningún libro con ese isbn",
                     "Error",
                     javax.swing.JOptionPane.ERROR_MESSAGE
                 );
@@ -494,6 +495,7 @@ public class Window extends javax.swing.JFrame {
         authorTF.setText("");
         dateTF.setText("");
         isbnTF.setText("");
+        contentTA.setText("");
     }//GEN-LAST:event_cleanBTNActionPerformed
     
     /**

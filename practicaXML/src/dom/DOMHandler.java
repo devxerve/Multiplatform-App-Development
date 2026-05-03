@@ -16,7 +16,6 @@ import org.w3c.dom.*;
 public class DOMHandler {
     private static Document doc = null;
     private File file = null;
-    private String path = null;
     
     public DOMHandler(File file){
         this.file = file;
@@ -24,8 +23,8 @@ public class DOMHandler {
     };
     
     /**
-     * Loads the doc pointer to the XML FILE (must have been initialized)
-     * @return code regarding the creation of the pointer (0 states sucessful)
+     * Devuelve el puntero doc correspondiente al XML
+     * @return Codigo referente a la finalizacion del metodo (-1 error 0 ok)
      */
     public int loadXML(){
         try{
@@ -40,8 +39,8 @@ public class DOMHandler {
         return 0;
     }
     /**
-     * Process the nodes of the DOM tree 
-     * @return output - String with the content of the DOM
+     * Crea y procesa los nodos del arbol dom
+     * @return output - String con el contenido de los nodos en formato texto
      */
     public String processDOM(){
         String output = "";
@@ -51,7 +50,7 @@ public class DOMHandler {
         for(int i = 0; i<nodes.getLength();i++){
             Node node = nodes.item(i);
             if(node.getNodeType() == Node.ELEMENT_NODE){  
-                String[] datum = processNodes(node);
+                String[] datum = processNodes(node); // llama al metodo processNodes
                 output += datum[1];
                 output += "\nEl isbn es: " + datum[3];
                 output += "\nPublicado en: " + datum[0];
@@ -62,7 +61,12 @@ public class DOMHandler {
         System.out.println(output);
         return output;
     }
-    
+    /**
+     * Procesa el nodo que se le pasa por parametro
+     * Consigue el contenido de sus nodos hijo y de sus atributos
+     * @param n nodo elemento (Libro)
+     * @return data String[] de 4 posiciones (Fecha, titulo, autor e ISBN)
+     */
     private String[] processNodes(Node n){
         String [] data = new String[4];
         Node ntemp = null;
@@ -80,7 +84,15 @@ public class DOMHandler {
         }
         return data;
     }
-    
+    /**
+     * Añade un libro al arbol DOM (NO LO AÑADE AL FICHERO SOLO CARGA EN MEMORIA
+     * EL NUEVO DOM)
+     * @param title titulo del nuevo libro  
+     * @param author autor del nuevo libro
+     * @param year año de publicacion del nuevo libro (ira al atributo publicado_en)
+     * @param isbn codigo identificacion isbn del nuevo libro
+     * @return codigo referente a la finalizacion del metodo (0 ok -1 fallo)
+     */
     public int addToDOM(String title, String author, String year,String isbn){
         try{
             Node ntitle = doc.createElement("Titulo");
@@ -112,7 +124,13 @@ public class DOMHandler {
             return -1;
         }
     }
-
+    
+    /**
+     * Guarda el DOM en un ficheor XML, si el xml existe pregunta por la sobreescritura
+     * Usa un JFileChooser para seleccionar donde guardar el fichero
+     * El JFileChooser tiene marcado como preferencia que guardes el archivo como XML
+     * @return codigo referente a la finalizacion del metodo (0 ok -1 fallo) 
+     */
     public int saveDOMtoXML() {
     JFileChooser chooser = new JFileChooser();
     chooser.setDialogTitle("Guardar XML");
@@ -155,33 +173,44 @@ public class DOMHandler {
         return -1;
     }
 }
-
+    /**
+     * Modifica el libro que se corresponda con el campo ISBN de la interfaz
+     * Primero busca los nodos elementos y sus hijos (LIBROS y atributos)
+     * Despues itera sobre los hijos, y si el isbn coincide con el del nodo 
+     * hijo isbn entonces modifica el libro con los valores correspondientes
+     * @param search codigo isbn para identificar el libro
+     * @param newTitle nuevo titulo
+     * @param newAuthor nuevo autor
+     * @param newYear nuevo año de publicacion
+     * @return codigo referente a la finalizacion del metodo (0 ok -1 fallo)
+     */
     public int modifyInDOM(String search, String newTitle, String newAuthor, String newYear) {
     Node root = doc.getFirstChild();
     NodeList nodes = root.getChildNodes();
 
     for (int i = 0; i < nodes.getLength(); i++) {
         Node node = nodes.item(i);
-        if (node.getNodeType() != Node.ELEMENT_NODE){
+        if (node.getNodeType() == Node.ELEMENT_NODE){
             
             NodeList children = node.getChildNodes();
             
             for (int j = 0; j < children.getLength(); j++) {
                 Node child = children.item(j);
+                
                 if ("isbn".equals(child.getNodeName())) {
                     
                     if (child.getFirstChild().getNodeValue().equals(search)) {
                         
                         for (int k = 0; k < children.getLength(); k++) {
                             Node field = children.item(k);
-                            if ("Titulo".equals(field.getNodeName()) && newTitle != null && !newTitle.isBlank()) {
+                            if (("Titulo".equals(field.getNodeName())) && ((newTitle != null && !newTitle.isBlank()))) {
                                 field.getFirstChild().setNodeValue(newTitle);
-                            } else if ("Autor".equals(field.getNodeName()) && newAuthor != null && !newAuthor.isBlank()) {
+                            } else if (("Autor".equals(field.getNodeName())) && (newAuthor != null) && (!newAuthor.isBlank())) {
                                 field.getFirstChild().setNodeValue(newAuthor);
                             }
                         }
                         
-                        if (newYear != null && !newYear.isBlank()) {
+                        if ((newYear != null) && (!newYear.isBlank())) {
                             ((Element) node).setAttribute("publicado_en", newYear);
                         }
                         return 0;
@@ -192,7 +221,11 @@ public class DOMHandler {
     }
     return -1;
 }
-
+    /**
+     * Verifica que un libro existe mediante una busqueda de su ISBN
+     * @param search isbn a buscar
+     * @return True si existe, False si no
+     */
     public Boolean verifyExistence(String search){
         Node root = doc.getFirstChild();
         NodeList nodes = root.getChildNodes();
